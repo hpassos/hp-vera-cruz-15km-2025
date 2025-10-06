@@ -73,11 +73,49 @@ const initialPlan: Plan = {
 };
 
 // --- Helper Functions (migrated from original script) ---
-const isoDate = (d = new Date()) => d.toISOString().slice(0, 10);
+const isoDate = (d = new Date()) => {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 const weekDiff = (start: string, date: string) => {
-  const ms = new Date(date).getTime() - new Date(start).getTime();
-  const w = Math.floor(ms / (1000 * 60 * 60 * 24 * 7)) + 1;
-  return Math.max(1, Math.min(w, 12));
+  // Helper to get the Monday of a given date's week
+  const getMonday = (d: Date) => {
+    const dateCopy = new Date(d.getTime());
+    // In JavaScript's getDay(), Sunday is 0, Monday is 1, ..., Saturday is 6.
+    const day = dateCopy.getDay();
+    // Calculate days to subtract to get to the preceding Monday.
+    // If it's Sunday (0), subtract 6 days. If it's Monday (1), subtract 0. If Tuesday (2), subtract 1, etc.
+    const diffToMonday = day === 0 ? 6 : day - 1;
+    dateCopy.setDate(dateCopy.getDate() - diffToMonday);
+    // Normalize time to midnight to prevent issues with DST or time of day.
+    dateCopy.setHours(0, 0, 0, 0);
+    return dateCopy;
+  };
+
+  const startDate = new Date(start);
+  const currentDate = new Date(date);
+
+  const startMonday = getMonday(startDate);
+  const currentMonday = getMonday(currentDate);
+
+  // If the current date is before the start of the plan's first week, default to week 1.
+  if (currentMonday < startMonday) {
+    return 1;
+  }
+
+  const msInAWeek = 1000 * 60 * 60 * 24 * 7;
+  const msDifference = currentMonday.getTime() - startMonday.getTime();
+
+  // Calculate the number of full weeks that have passed.
+  const weeksPassed = Math.floor(msDifference / msInAWeek);
+
+  // The week number is the number of weeks passed + 1.
+  const weekNumber = weeksPassed + 1;
+
+  // The plan is 12 weeks long, so cap the result.
+  return Math.max(1, Math.min(weekNumber, 12));
 };
 const weekMidTarget = (wk: Week) => Math.round((wk.target_km_min + wk.target_km_max) / 2);
 const realizedKm = (wk: Week) => {
