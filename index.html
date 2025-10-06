@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vera | Treinador de Corrida Gamificado</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#ff7a00',
+              light: '#ff9b3a',
+            },
+            primary: '#0b0f14',
+            secondary: '#121821',
+            accent: '#31d0aa',
+            muted: '#8aa0b4',
+            text: {
+              DEFAULT: '#e7eef6',
+              dark: '#cfe3f6',
+            },
+            danger: '#ff4d4f',
+            success: '#2ecc71',
+            warning: '#f4c150',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Smooth scrolling and hiding scrollbar */
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; -ms-overflow-style: none; scrollbar-width: none; }
+    body::-webkit-scrollbar { display: none; }
+    /* Custom focus ring */
+    *:focus-visible {
+        outline: 2px solid var(--tw-colors-brand-light);
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-primary text-text antialiased">
+
+  <!-- App container -->
+  <div id="app" class="max-w-6xl mx-auto px-4 md:px-6 py-8">
+    <!-- Header (will be rendered by Header.ts) -->
+    <header id="header-container" class="sticky top-0 z-40 bg-primary/80 backdrop-blur-lg -mx-4 md:-mx-6 px-4 md:px-6">
+    </header>
+
+    <main class="mt-6">
+      <!-- Seção Resumo -->
+      <section id="resumo" class="py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 flex flex-col gap-6">
+            <div id="kpis-wrapper">
+              <!-- KPIs and week selector will be rendered here -->
+            </div>
+            <div id="achievements-wrapper">
+              <!-- Achievements will be rendered here -->
+            </div>
+          </div>
+          <div id="chart-container" class="self-start">
+            <div class="bg-secondary border border-gray-700/50 rounded-2xl p-4 h-full">
+              <h3 class="font-bold text-lg">Evolutivo Semanal</h3>
+              <canvas id="evoChart" class="mt-4"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Seção Treinos da Semana -->
+      <section id="treinos" class="py-8">
+        <div id="week-grid-container">
+            <!-- Week grid will be rendered here -->
+        </div>
+      </section>
+
+      <!-- Seção Registrar Semana -->
+      <section id="registrar" class="py-8">
+        <div id="register-form-container">
+            <!-- Register form will be rendered here -->
+        </div>
+      </section>
+
+      <!-- Seção Plano 12 Semanas -->
+      <section id="plano" class="py-8">
+        <div id="plan-table-container" class="bg-secondary border border-gray-700/50 rounded-2xl p-4 md:p-6">
+            <!-- Plan table will be rendered here -->
+        </div>
+      </section>
+
+      <!-- Seção Glossário -->
+      <section id="glossario" class="py-8">
+        <div id="glossary-container">
+            <!-- Glossary will be rendered here -->
+        </div>
+      </section>
+    </main>
+
+    <footer class="text-center text-muted text-sm mt-12">
+      <p>Feito com ❤️. Código aberto e pronto para evoluir.</p>
+      <p class="mt-1">
+        <a href="#" class="hover:text-brand transition-colors">Exportar Dados (JSON)</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- Modal Container -->
+  <div id="modal-container"></div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50"></div>
+
+  <!-- Main script -->
+  <script type="module" src="/dist/main.js"></script>
+</body>
+</html>
