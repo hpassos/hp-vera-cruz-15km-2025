@@ -73,7 +73,12 @@ const initialPlan: Plan = {
 };
 
 // --- Helper Functions (migrated from original script) ---
-const isoDate = (d = new Date()) => d.toISOString().slice(0, 10);
+const isoDate = (d = new Date()) => {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 const weekDiff = (start: string, date: string) => {
   // Helper to get the Monday of a given date's week
   const getMonday = (d: Date) => {
