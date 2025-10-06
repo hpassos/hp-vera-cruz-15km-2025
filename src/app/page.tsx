@@ -107,8 +107,12 @@ export default function Home() {
       const res = await fetch('/api/data');
       if (!res.ok) throw new Error('Failed to load data');
       let doc = await res.json();
-      if (!doc?.plan?.weeks?.length) {
-          doc = { plan: initialPlan };
+      // Ensure plan and weeks exist, but preserve existing plan data
+      if (!doc.plan) {
+        doc.plan = initialPlan;
+      }
+      if (!doc.plan.weeks) {
+        doc.plan.weeks = [];
       }
 
       // Business logic from original script
@@ -330,8 +334,23 @@ export default function Home() {
   }
 
   const { plan } = state;
+
+  if (!plan.weeks || plan.weeks.length === 0) {
+    return (
+      <main className="container" style={{ textAlign: 'center', paddingTop: '2rem' }}>
+        <div className="card">
+          <h3>Plano de Treino Vazio</h3>
+          <p className="sub" style={{marginTop: '1rem'}}>Seu plano foi carregado, mas não contém nenhuma semana de treino.</p>
+          <p style={{marginTop: '1rem'}}>Para começar, por favor adicione um array de semanas (<code>"weeks": [...]</code>) ao objeto <code>"plan"</code> no seu JSONBin.</p>
+        </div>
+      </main>
+    );
+  }
+
   const week = plan.weeks[currentWeek - 1];
-  if (!week) return <div>Semana inválida.</div>;
+  if (!week) {
+    return <div style={{textAlign: 'center', paddingTop: '4rem', fontSize: '1.5rem'}}>Semana inválida. Verifique a data de início do seu plano ({plan.start_date}) e a data atual.</div>
+  }
 
   const totalRealizedKm = week.realized_km || 0;
   const targetMid = weekMidTarget(week);
